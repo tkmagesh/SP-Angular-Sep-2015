@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug Tracker</title>
+    <style>
+        .closed {
+            color : red;
+            text-decoration: line-through;
+            font-style: italic;
+            font-weight: bold;
+        }
+        div{
+            margin-bottom: 10px;
+        }
+        li{
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        /*
+        1. Display a list of bugs
+        2. Add a new Bug
+        3. Toggle the closed status of bugs
+        4. Remove completed bugs
+        5. Display stats
+        6. Search for bugs
+        7. Sort the bugs
+        8. Improvise the bug display
+        9. Persist the bugs in the server
+        10. Display the createdAt time of the bug
+        11. Categorize the bugs
+        */
+    </script>
+</head>
+<body>
+    <h1>Bug Tracker</h1>
+    <hr>
+    <div class="content">
+        <div class="stats">
+            <span class="closed">1</span>
+            /
+            <span>3</span>
+        </div>
+        <div class="search"></div>
+        <div class="sort"></div>
+        <div class="list">
+            <label for="">Bug :</label>
+            <input type="text" name="" id="">
+            <input type="button" value="Add Bug">
+            <input type="button" value="Remove Closed">
+            <ol>
+                <li>Server communication failure</li>
+                <li>Object reference not set to an instance of an object</li>
+                <li class="closed">Data not saved</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

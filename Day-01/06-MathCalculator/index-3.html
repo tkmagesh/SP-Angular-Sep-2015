@@ -5,6 +5,7 @@
     <title>Math Calculator</title>
     <script src="angular.js"></script>
     <script>
+       
         var myApp = angular.module("myApp", []);
         myApp.controller("mathController", function($scope){
             $scope.number1 = '';
@@ -14,21 +15,8 @@
             $scope.calculate = function(){
                 var n1 = parseInt($scope.number1,10),
                     n2 = parseInt($scope.number2,10);
-                
-                switch ($scope.operation){
-                    case 'add':
-                        $scope.result = n1 + n2;
-                        break;
-                    case 'subtract':
-                        $scope.result = n1 - n2;
-                        break;
-                    case 'multiply':
-                        $scope.result = n1 * n2;
-                        break;
-                    case 'divide':
-                        $scope.result = n1 / n2;
-                        break;
-                }
+                var expr = n1 + $scope.operation + n2;
+                $scope.result = eval(expr);
             };
         });
     </script>
@@ -37,10 +25,10 @@
 <body ng-app="myApp" ng-controller="mathController">
     <input type="text" ng-model="number1">
     <select ng-model="operation">
-        <option value="add">add</option>
-        <option value="subtract">subtract</option>
-        <option value="multiply">multiply</option>
-        <option value="divide">divide</option>
+        <option value="+">add</option>
+        <option value="-">subtract</option>
+        <option value="*">multiply</option>
+        <option value="/">divide</option>
     </select>
     <input type="text" ng-model="number2">
     <input type="button" value="Calculate" ng-click="calculate()">
