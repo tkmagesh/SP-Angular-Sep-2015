@@ -143,7 +143,15 @@
             <input type="checkbox" ng-model="searchBug.isClosed">
             <input type="button" value="Show All" ng-click="searchBug.isClosed=undefined">
         </div>
-        <div class="sort"></div>
+        <div class="sort">
+            <label for="">Order By:</label>
+            <select>
+                <option value="">Name</option>
+                <option value="">Status</option>
+            </select>
+            <label for=""> Descending : ?</label>
+            <input type="checkbox" >
+        </div>
         <div class="list">
             <label for="">Bug :</label>
             <input type="text" ng-model="newBug">
