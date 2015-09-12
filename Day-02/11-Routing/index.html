@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Routing Demo</title>
+    <script src="angular.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+        angular
+            .module("myApp", ["ngRoute"])
+            .config(function($routeProvider){
+                $routeProvider
+                    .when("/products", {
+                        //template : "<h3>Products</h3>"
+                        templateUrl : "templates/products.html",
+                        controller : "productsController"
+                    })
+                    .when("/customers", {
+                        //template : "<h3>Customers</h3>"
+                        templateUrl : "templates/customers.html"
+                    })
+                    .when("/products/:id", {
+                        templateUrl : "templates/productInfo.html",
+                        controller : "productInfoController"
+                    })
+                    .otherwise({
+                        redirectTo : "/products"
+                    });
+            })
+            .factory("productService", function(){
+                return {
+                    getAll : function(){
+                        return [
+                            {id : 1, name : "Pen", cost : 80, units : 40, desc : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi repellendus mollitia repellat harum aperiam ratione quae placeat obcaecati eaque facere praesentium eum ipsa laborum dolore at, doloremque quaerat eius. At!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore sunt, aut, illum quod praesentium rem impedit fugiat maxime laudantium, nobis rerum nam qui laborum odio, pariatur voluptatibus corporis. Vel, quisquam."},
+                            {id : 2, name : "Hen", cost : 60, units : 30, desc : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi repellendus mollitia repellat harum aperiam ratione quae placeat obcaecati eaque facere praesentium eum ipsa laborum dolore at, doloremque quaerat eius. At!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore sunt, aut, illum quod praesentium rem impedit fugiat maxime laudantium, nobis rerum nam qui laborum odio, pariatur voluptatibus corporis. Vel, quisquam."},
+                            {id : 3, name : "Den", cost : 90, units : 80, desc : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi repellendus mollitia repellat harum aperiam ratione quae placeat obcaecati eaque facere praesentium eum ipsa laborum dolore at, doloremque quaerat eius. At!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore sunt, aut, illum quod praesentium rem impedit fugiat maxime laudantium, nobis rerum nam qui laborum odio, pariatur voluptatibus corporis. Vel, quisquam."},
+                            {id : 4, name : "Zen", cost : 40, units : 20, desc : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi repellendus mollitia repellat harum aperiam ratione quae placeat obcaecati eaque facere praesentium eum ipsa laborum dolore at, doloremque quaerat eius. At!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore sunt, aut, illum quod praesentium rem impedit fugiat maxime laudantium, nobis rerum nam qui laborum odio, pariatur voluptatibus corporis. Vel, quisquam."}
+                        ];
+                    }
+                }
+            })
+            .controller("productsController", function($scope, productService){
+                $scope.products = productService.getAll();
+            })
+            .controller("productInfoController", function($scope, productService, $routeParams){
+                var productId = parseInt($routeParams.id, 10);
+                $scope.product = productService.getAll().filter(function(product){
+                    return product.id === productId;
+                })[0];
+            });
+
+    </script>
+</head>
+<body ng-app="myApp">
+    <h1>Flopkart</h1>
+    <a href="#/products">Products</a> &nbsp; &nbsp;<a href="#/customers">Customers</a>
+    <hr>
+    <div ng-view></div>
+</body>
+</html>

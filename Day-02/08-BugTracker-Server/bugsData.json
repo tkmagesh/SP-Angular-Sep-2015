@@ -1,5 +1,5 @@
 {
-  "bugs": [
+  "issues": [
     {
       "id": 1,
       "name": "Data Persistence inconsistent",
@@ -26,5 +26,8 @@
       "isClosed": false,
       "id": 5
     }
-  ]
+  ],
+  "user": {
+    "name": "Magesh"
+  }
 }

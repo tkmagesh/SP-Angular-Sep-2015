@@ -76,48 +76,113 @@
             }
         });*/
 
+        /*bugTrackerApp.factory("bugService", function(Bug, $http, $q){
+            return {
+                getAll:function(){
+                     var promise = $http.get('/bugs');
+                     return promise.then(function(response){
+                        var result = response.data.map(function(bugData){
+                            return new Bug(bugData);
+                        });
+                         return result;
+                    });
+                },
+                add : function(newBugData){
+                    return $http
+                        .post('/bugs', newBugData)
+                        .then(function(response){
+                            var bugData = response.data;
+                            var newBug = new Bug(bugData);
+                            return newBug;
+                        });
+                },
+                save : function(bug){
+                    return $http.put("/bugs/" + bug.id, bug);
+                },
+                delete : function(bug){
+                    $http.delete("/bugs/" + bug.id);
+                }
+            }
+        });*/
 
-        bugTrackerApp.controller("bugsController", function($scope, Bug, $http){
+        bugTrackerApp.config(function(bugServiceProvider){
+            console.log("Config - bugServiceProvider = ", bugServiceProvider);
+            bugServiceProvider.setBaseUrl("/issues/");
+        });
+
+        bugTrackerApp.run(function(bugService){
+            console.log("Run - bugService = ", bugService);
+        });
+
+
+        bugTrackerApp.provider("bugService", function(){
+            var _baseUrl = "/bugs/";
+            return {
+                setBaseUrl : function(baseUrl){
+                    _baseUrl = baseUrl;
+                },
+                $get : function(Bug, $http, $q){
+                    return {
+                        getAll:function(){
+                             var promise = $http.get(_baseUrl);
+                             return promise.then(function(response){
+                                var result = response.data.map( function(bugData){
+                                    return new Bug(bugData);
+                                });
+                                 return result;
+                            });
+                        },
+                        add : function(newBugData){
+                            return $http
+                                .post(_baseUrl, newBugData)
+                                .then(function(response){
+                                    var bugData = response.data;
+                                    var newBug = new Bug(bugData);
+                                    return newBug;
+                                });
+                        },
+                        save : function(bug){
+                            return $http.put(_baseUrl + bug.id, bug);
+                        },
+                        delete : function(bug){
+                            $http.delete(_baseUrl + bug.id);
+                        }
+                    }
+                }
+            };
+        });
+
+        bugTrackerApp.controller("bugsController", function($scope, bugService, Bug, $http){
             $scope.bugs = [];
-            var promise = $http.get('/bugs');
-            promise.then(function(response){
-                $scope.bugs = response.data.map(function(bugData){
-                    return new Bug(bugData);
-                });
+            var promise = bugService.getAll();
+            promise.then(function(bugs){
+                $scope.bugs = bugs;
             });
+
             //$scope.newBug = '';
             $scope.addBug = function(){
                 var newBugData = {
                     name : $scope.newBug,
                     isClosed : false
                 };
-                $http
-                    .post('/bugs', newBugData)
-                    .then(function(response){
-                        var bugData = response.data;
-                        var newBug = new Bug(bugData);
-                        $scope.bugs.push(newBug);
-                    });
+                bugService.save(newBugData).then(function(newBug){
+                    $scope.bugs.push(newBug);
+                });
 
             }
             $scope.toggle = function(bug){
                 bug.toggle();
-                $http.put("/bugs/" + bug.id, bug);
+                bugService.save(bug);
             };
             $scope.removeClosed = function(){
                 for(var i=$scope.bugs.length-1; i>=0 ; i--){
                     if ($scope.bugs[i].isClosed){
                         var bug = $scope.bugs[i];
-                        $http.delete("/bugs/" + bug.id);
+                        bugService.delete(bug);
                         $scope.bugs.splice(i,1);
                     }
                 }
             };
-           /* $scope.getClosedCount = function(){
-                return $scope.bugs.reduce(function(result, bug){
-                    return bug.isClosed ? ++result : result;
-                }, 0);
-            }; */
 
         });
 
@@ -135,13 +200,49 @@
             return function(bugs){
                 return builtinFilter(bugs, {isClosed : true}).length;
             };
-        })
+        });
+
+        bugTrackerApp.run(function($rootScope, $http){
+            $rootScope.showOverlay = true;
+            $http.get("/user").then(function(response){
+                $rootScope.username = response.data.name;
+                $rootScope.showOverlay = false;
+            });
+        });
+
+        bugTrackerApp.service("utils", function(){
+            this.getDate = function(){
+                return new Date();
+            }
+        });
     </script>
+    <style>
+        .overlay{
+            width : 100%;
+            height : 100%;
+            position: absolute;
+            left : 0;
+            top : 0;
+            background: white;
+            opacity: 50%;
+        }
+        .overlay div{
+            font-size: 28pt;
+            text-align: center;
+            line-height: 400px;
+        }
+    </style>
 </head>
 <body ng-app="bugTrackerApp">
-    <h1>Bug Tracker</h1>
-    <hr>
+
+    <div class="overlay" ng-show="showOverlay">
+        <div>Loading....</div>
+    </div>
+
     <div class="content" ng-controller="bugsController">
+       <h1>Bug Tracker</h1>
+    <h4><i>[{{username}}]</i></h4>
+    <hr>
         <div class="stats">
             <!--<span class="closed">{{ (bugs | filter:{isClosed : true}).length }}</span>-->
             <span class="closed">{{ bugs | closedCount }}</span>
