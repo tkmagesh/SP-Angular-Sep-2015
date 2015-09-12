@@ -24,9 +24,9 @@
         3. Toggle the closed status of bugs - done
         4. Remove completed bugs - done
         5. Display stats - done
-        6. Search for bugs
-        7. Sort the bugs
-        8. Improvise the bug display
+        6. Search for bugs - done
+        7. Sort the bugs - done
+        8. Improvise the bug display - done
         9. Persist the bugs in the server
         10. Display the createdAt time of the bug
         11. Categorize the bugs
@@ -145,12 +145,12 @@
         </div>
         <div class="sort">
             <label for="">Order By:</label>
-            <select>
-                <option value="">Name</option>
-                <option value="">Status</option>
+            <select ng-model="bugSort.by">
+                <option value="name">Name</option>
+                <option value="isClosed">Status</option>
             </select>
             <label for=""> Descending : ?</label>
-            <input type="checkbox" >
+            <input type="checkbox" ng-model="bugSort.order">
         </div>
         <div class="list">
             <label for="">Bug :</label>
@@ -158,7 +158,7 @@
             <input type="button" value="Add Bug" ng-click="addBug()">
             <input type="button" value="Remove Closed" ng-click="removeClosed()">
             <ol>
-                <li ng-repeat="bug in bugs | filter:searchBug"
+                <li ng-repeat="bug in bugs | filter:searchBug | orderBy:bugSort.by:bugSort.order"
                     ng-click="toggle(bug)"
                     ng-class="{closed : bug.isClosed}"
                 >{{bug.name | trimText}}</li>

@@ -1,0 +1,7 @@
+{
+    "bugs" : [
+        {"id" : 1, "name" : "Data Persistence inconsistent", "isClosed" : false},
+        {"id" : 2, "name" : "Object reference not found", "isClosed" : false},
+        {"id" : 3, "name" : "Stack overflow error", "isClosed" : false}
+    ]
+}
